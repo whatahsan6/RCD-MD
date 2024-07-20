@@ -7,7 +7,7 @@ RUN npm cache clean --force
 RUN rm -rf /root/rcd/node_modules
 
 # Install dependencies
-WORKDIR /root/status
+WORKDIR /root/rcd
 RUN npm install
 
 # Add additional Steps To Run...
