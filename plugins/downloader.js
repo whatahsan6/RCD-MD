@@ -1716,31 +1716,48 @@ smd(
  smd({
    pattern: "song",
    alias: ["audio"],
-   desc: "Downloads audio from youtube.",
+   desc: "Downloads audio from YouTube.",
    category: "downloader",
    filename: __filename,
-   use: "<give text>"
- }, async (_0x2c2023, _0x4ec99f) => {
+   use: "<search query>"
+}, async (message, query) => {
    try {
-     if (!_0x4ec99f) {
-       return await _0x2c2023.reply("*_Give Me Search Query_*");
+     if (!query) {
+       return await message.reply("*_Please provide a search_*");
      }
-     let _0x3b2ca6 = await yts(_0x4ec99f);
-     let _0x4123ae = _0x3b2ca6.all[0];
-     let _0x5883a9 = "\t *ʀᴄᴅ-ᴍᴅ • sᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*   \n\n*Title :* " + _0x4123ae.title + "\nUrl : " + _0x4123ae.url + "\n*Description :* " + _0x4123ae.timestamp + "\n*Views :* " + _0x4123ae.views + "\n*Uploaded :* " + _0x4123ae.ago + "\n*Author :* " + _0x4123ae.author.name + "\n\n\n_Reply 1 for Video_ Or _1 document_\n_Reply 2 for Audio_ Or _2 document_";
-     let _0x3885cc = await smdBuffer(_0x4123ae.thumbnail);
-     var _0x44a363 = {
-       ...(await _0x2c2023.bot.contextInfo(Config.botname, "ʏᴏᴜᴛᴜʙᴇ ꜱᴏɴɢ", _0x3885cc))
-     };
-     await _0x2c2023.bot.sendMessage(_0x2c2023.jid, {
-       image: _0x3885cc,
-       caption: _0x5883a9,
-       contextInfo: _0x44a363
+
+     // Search for videos on YouTube
+     let results = await yts(query);
+     let video = results.all[0];
+
+     // Prepare message details
+     let details = `*ʀᴄᴅ-ᴍᴅ • sᴏɴɢ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
+                    `*Title:* ${video.title}\n` +
+                    `Url: ${video.url}\n` +
+                    `*Description:* ${video.timestamp}\n` +
+                    `*Views:* ${video.views}\n` +
+                    `*Uploaded:* ${video.ago}\n` +
+                    `*Author:* ${video.author.name}\n\n` +
+                    `_Reply 1 for Video or 1 document_\n` +
+                    `_Reply 2 for Audio or 2 document_`;
+
+     // Fetch thumbnail
+     let thumbnailBuffer = await smdBuffer(video.thumbnail);
+
+     // Send message with thumbnail and details
+     await message.bot.sendMessage(message.jid, {
+       image: thumbnailBuffer,
+       caption: details,
+       contextInfo: {
+         ...await message.bot.contextInfo(Config.botname, "YouTube Song", thumbnailBuffer)
+       }
      });
-   } catch (_0x86b411) {
-     return _0x2c2023.error(_0x86b411 + "\n\ncommand: song", _0x86b411, "*_File not found!!_*");
+
+   } catch (error) {
+     return message.error(error.message + "\n\ncommand: song", error, "*_An error occurred_*");
    }
- });
+});
+
 smd({
    pattern: "play",
    alias: ["music"],
