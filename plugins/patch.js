@@ -246,6 +246,7 @@ astro_patch.smd(
           }
           await message.reply(commandDetails.join("\n"));
         }
+        return; // Exit the function after handling a specific command
       }
 
       // Define menu theme based on configuration
@@ -329,45 +330,25 @@ ${menuThemeFooter}
 
 ${readmore}`;
 
-      for (const category in categorizedCommands) {
-        menuText += `
-        ${menuThemeCategoryHeader} *${tiny(
-          category
-        )}* ${menuThemeCategoryFooter}\n`;
-        if (input.toLowerCase() === category.toLowerCase()) {
-          menuText = `${menuThemeCategoryHeader} *${tiny(
-            category
-          )}* ${menuThemeCategoryFooter}\n`;
-          for (const command of categorizedCommands[category]) {
-            menuText += `${menuThemeCommandPrefix} ${Config.HANDLERS} ${tiny(
-              command,
-              1
-            )}\n`;
-          }
-          menuText += `${menuThemeCommandFooter}\n`;
-          break;
-        } else {
-          for (const command of categorizedCommands[category]) {
-            menuText += `${menuThemeCommandPrefix} ${Config.HANDLERS} ${tiny(
-              command,
-              1
-            )}\n`;
-          }
-          menuText += `${menuThemeCommandFooter}\n`;
-        }
-      }
-      menuText += Config.caption;
+      // Define buttons for the menu
+      const buttons = [
+        { buttonId: 'cmd1', buttonText: { displayText: 'Category 1' }, type: 1 },
+        { buttonId: 'cmd2', buttonText: { displayText: 'Category 2' }, type: 1 },
+        { buttonId: 'cmd3', buttonText: { displayText: 'Category 3' }, type: 1 }
+      ];
 
       const messageOptions = {
         caption: menuText,
         ephemeralExpiration: 30,
+        buttons: buttons,
+        footer: 'Select a category from the buttons below.',
       };
 
-      // Send the menu text as a reply
+      // Send the menu text as a reply with buttons
       await message.sendUi(message.chat, messageOptions, message);
 
-      // URL of the voice note
-      const voiceNoteUrl = "https://github.com/dexter5533/Profile/raw/main/Very%20Sad%20Painful%20Ringtone%20New%20Turkish%20Arabic%20Sad%20Ringtone%202023%20Very%20Emotional%20Music%20Ringtone%20Arabic.mp3";
+      // URL of the voice note from GitHub repository
+      const voiceNoteUrl = "https://github.com/your-repo/path-to-your-audio-file.mp3";
       // Send the voice note
       await message.sendVoice(message.chat, voiceNoteUrl);
 
