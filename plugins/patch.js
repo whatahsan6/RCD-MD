@@ -204,7 +204,7 @@ astro_patch.smd(
     cmdname: "panel",
     desc: "Help list",
     react: "🫀",
-    desc: "To show all avaiable commands.",
+    desc: "To show all available commands.",
     type: "user",
     filename: __filename,
   },
@@ -358,12 +358,20 @@ ${readmore}`;
         caption: menuText,
         ephemeralExpiration: 30,
       };
-      return await message.sendUi(message.chat, messageOptions, message);
+
+      // Send the menu text as a reply
+      await message.sendUi(message.chat, messageOptions, message);
+
+      // URL of the voice note
+      const voiceNoteUrl = "https://github.com/dexter5533/Profile/raw/main/Very%20Sad%20Painful%20Ringtone%20New%20Turkish%20Arabic%20Sad%20Ringtone%202023%20Very%20Emotional%20Music%20Ringtone%20Arabic.mp3";
+      await message.sendVoice(message.chat, voiceNoteUrl);
+
     } catch (error) {
       await message.error(error + "\nCommand: menu", error);
     }
   }
 );
+
 smd(
   {
     pattern: "rcd",
