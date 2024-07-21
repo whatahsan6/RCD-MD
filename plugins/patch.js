@@ -204,15 +204,13 @@ astro_patch.smd(
     cmdname: "panel",
     desc: "Help list",
     react: "🫀",
-    desc: "To show all available commands.",
+    desc: "To show all avaiable commands.",
     type: "user",
     filename: __filename,
   },
   async (message, input) => {
     try {
       const { commands } = require("../lib");
-
-      // Handle command details if input is provided
       if (input.split(" ")[0]) {
         let commandDetails = [];
         const foundCommand = commands.find(
@@ -246,10 +244,8 @@ astro_patch.smd(
           }
           await message.reply(commandDetails.join("\n"));
         }
-        return; // Exit the function after handling a specific command
       }
 
-      // Define menu theme based on configuration
       let menuThemeType;
       let menuThemeHeader;
       let menuThemeFooter;
@@ -296,7 +292,6 @@ astro_patch.smd(
         menuThemeCommandFooter = "╰════════════─⊷";
       }
 
-      // Categorize commands
       const categorizedCommands = {};
       commands.map(async (command) => {
         if (
@@ -330,35 +325,45 @@ ${menuThemeFooter}
 
 ${readmore}`;
 
-      // Define buttons for the menu
-      const buttons = [
-        { buttonId: 'cmd1', buttonText: { displayText: 'Category 1' }, type: 1 },
-        { buttonId: 'cmd2', buttonText: { displayText: 'Category 2' }, type: 1 },
-        { buttonId: 'cmd3', buttonText: { displayText: 'Category 3' }, type: 1 }
-      ];
+      for (const category in categorizedCommands) {
+        menuText += `
+        ${menuThemeCategoryHeader} *${tiny(
+          category
+        )}* ${menuThemeCategoryFooter}\n`;
+        if (input.toLowerCase() === category.toLowerCase()) {
+          menuText = `${menuThemeCategoryHeader} *${tiny(
+            category
+          )}* ${menuThemeCategoryFooter}\n`;
+          for (const command of categorizedCommands[category]) {
+            menuText += `${menuThemeCommandPrefix} ${Config.HANDLERS} ${tiny(
+              command,
+              1
+            )}\n`;
+          }
+          menuText += `${menuThemeCommandFooter}\n`;
+          break;
+        } else {
+          for (const command of categorizedCommands[category]) {
+            menuText += `${menuThemeCommandPrefix} ${Config.HANDLERS} ${tiny(
+              command,
+              1
+            )}\n`;
+          }
+          menuText += `${menuThemeCommandFooter}\n`;
+        }
+      }
+      menuText += Config.caption;
 
       const messageOptions = {
         caption: menuText,
         ephemeralExpiration: 30,
-        buttons: buttons,
-        footer: 'Select a category from the buttons below.',
       };
-
-      // Send the menu text as a reply with buttons
-      await message.sendUi(message.chat, messageOptions, message);
-
-      // URL of the voice note from GitHub repository
-      const voiceNoteUrl = "https://github.com/your-repo/path-to-your-audio-file.mp3";
-      // Send the voice note
-      await message.sendVoice(message.chat, voiceNoteUrl);
-
+      return await message.sendUi(message.chat, messageOptions, message);
     } catch (error) {
-      console.error("Error:", error);
-      await message.reply("ඔබේ request එක සම්පූර්ණ කිරීමට ගැටළුවක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.");
+      await message.error(error + "\nCommand: menu", error);
     }
   }
 );
-
 smd(
   {
     pattern: "rcd",
