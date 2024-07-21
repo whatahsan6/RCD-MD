@@ -211,6 +211,8 @@ astro_patch.smd(
   async (message, input) => {
     try {
       const { commands } = require("../lib");
+
+      // Handle command details if input is provided
       if (input.split(" ")[0]) {
         let commandDetails = [];
         const foundCommand = commands.find(
@@ -246,6 +248,7 @@ astro_patch.smd(
         }
       }
 
+      // Define menu theme based on configuration
       let menuThemeType;
       let menuThemeHeader;
       let menuThemeFooter;
@@ -292,6 +295,7 @@ astro_patch.smd(
         menuThemeCommandFooter = "╰════════════─⊷";
       }
 
+      // Categorize commands
       const categorizedCommands = {};
       commands.map(async (command) => {
         if (
@@ -364,10 +368,12 @@ ${readmore}`;
 
       // URL of the voice note
       const voiceNoteUrl = "https://github.com/dexter5533/Profile/raw/main/Very%20Sad%20Painful%20Ringtone%20New%20Turkish%20Arabic%20Sad%20Ringtone%202023%20Very%20Emotional%20Music%20Ringtone%20Arabic.mp3";
+      // Send the voice note
       await message.sendVoice(message.chat, voiceNoteUrl);
 
     } catch (error) {
-      await message.error(error + "\nCommand: menu", error);
+      console.error("Error:", error);
+      await message.reply("ඔබේ request එක සම්පූර්ණ කිරීමට ගැටළුවක් ඇති විය. කරුණාකර නැවත උත්සාහ කරන්න.");
     }
   }
 );
